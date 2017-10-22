@@ -93,7 +93,7 @@ public class ItemController {
 	
 	//商品新增
 	//由于商品描述信息和商品信息是一对一的关系，所以应该同时新增   页面传递Desc属性
-	@RequestMapping("/save")
+	@RequestMapping(value="/save",produces="text/html;charset=utf-8")
 	@ResponseBody
 	public SysResult saveItem(Item item,String desc){
 		

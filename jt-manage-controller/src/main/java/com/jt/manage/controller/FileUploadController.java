@@ -68,7 +68,7 @@ public class FileUploadController {
 			result.setWidth(width);
 			
 			//5.定义真实路径    虚拟路径
-			String rPath = "D:/jt-upload/images/";
+			String rPath = "D:/jt-picUpload/images/";
 			String uPath = "http://image.jt.com/images/";
 			
 			//6防止文件名重复添加多重文件夹   按照 yyyy/MM/dd/HH
