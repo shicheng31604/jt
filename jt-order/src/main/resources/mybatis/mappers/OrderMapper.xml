@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jt.order.mapper.OrderMapper">
+
+	<!-- 定义tb_order表的关联查询,autoMapping="true" 开启映射开关 -->
+	<resultMap type="Order" id="orderRM" autoMapping="true">
+
+		<!-- 定义oreder的主键 -->
+		<id property="orderId" column="order_id"/>
+
+		<!-- 声明tb_order和tb_order_shipping的一对一关系 -->
+		<association property="orderShipping" column="order_id" javaType="OrderShipping" select="queryOrderShipping"></association>
+
+		<!-- 声明tb_order和tb_item的一对多关系 -->
+		<collection property="orderItems" javaType="ArrayList" ofType="OrderItem" column="order_id" select="queryOrderItems"></collection>
+
+
+	</resultMap>
+
+<!-- 根据订单id 查询tb_order表信息 -->
+<select id="queryOrderById" parameterType="string" resultMap="orderRM">
+select * from tb_order where order_id=#{id}
+</select>
+
+<!-- 根据订单id 查询tb_order_shipping表信息 -->
+<select id="queryOrderShipping" parameterType="string" resultType="OrderShipping">
+select * from tb_order_shipping where order_id=#{id}
+</select>
+
+<!-- 根据订单id 查询tb_order_item表信息 -->
+<select id="queryOrderItems" parameterType="string" resultType="OrderItem">
+select * from tb_order_item where order_id=#{id}
+</select>
+
+
+<!-- 此方法要实现批量插入，当执行此方法后，会向三张表插入对应的数据
+注意：要开启mybatis的批量更新或新增，需要在jdbc.properties
+里配置：&allowMultiQueries=true
+ -->
+<insert id="createOrder" parameterType="Order">
+		INSERT INTO tb_order VALUES (#{orderId},#{payment},#{paymentType},#{postFee},#{status},#{created},#{updated},#{paymentTime},#{consignTime},#{endTime},#{closeTime},#{shippingName},#{shippingCode},#{userId},#{buyerMessage},#{buyerNick},#{buyerRate});
+		INSERT INTO tb_order_item VALUES 
+		<foreach collection="orderItems" item="item" separator=",">
+			(#{item.itemId},#{orderId},#{item.num},#{item.title},#{item.price},#{item.totalFee},#{item.picPath})
+		</foreach>
+		;
+		INSERT INTO tb_order_shipping VALUES (#{orderId},#{orderShipping.receiverName},#{orderShipping.receiverPhone},#{orderShipping.receiverMobile},#{orderShipping.receiverState},#{orderShipping.receiverCity},#{orderShipping.receiverDistrict},#{orderShipping.receiverAddress},#{orderShipping.receiverZip},NOW(),NOW());
+
+</insert>
+
+<update id="updateOrderStatus" parameterType="date">
+
+update tb_order set status=6 where status=1 and created &lt; #{date}	
+
+</update>
+</mapper>
