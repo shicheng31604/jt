@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jt.cart.mapper.CartMapper">
+
+<!--根据用户id，商品id来更新购物车商品数量 -->
+<update id="updateCart" parameterType="Cart">
+update tb_cart set num=#{num},updated=#{updated} where user_id=#{userId} and item_id=#{itemId}
+</update>
+</mapper>
