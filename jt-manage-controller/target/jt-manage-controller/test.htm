@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+ <head>
+ </head>
+ <body>
+	<script type="text/javascript" src="http://manage.jt.com/js/jquery-easyui-1.4.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		//这段js代码的含义就是，当页面被请求时，会利用js去请求http://manage.jt.com/test.json这个文件
+		//然后利用js函数，把test.json里的json数据拿到，并解析key对应的value值
+		$(function(){
+			$.get("http://manage.jt.com/test.json",function(data){
+				alert(data.key);
+			});
+		});
+		
+	</script>
+
+ </body>
+</html>

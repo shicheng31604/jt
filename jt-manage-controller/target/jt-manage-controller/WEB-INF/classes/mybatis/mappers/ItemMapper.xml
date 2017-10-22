@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jt.manage.mapper.ItemMapper">
+	
+	<!--查询全部的商品信息  商品信息在查询时应该根据修改时间 降序排列 -->
+	<select id="findItemList" resultType="Item">
+		select * from tb_item order by updated desc
+	</select>
+	
+	
+	<!--根分页查询数据  -->
+	<select id="findItemPageList" resultType="Item">
+		select * from tb_item order by updated desc limit #{start},#{rows}
+	</select>
+	
+	
+	<select id="findItemCatNameByItemId" resultType="string">
+		select name from tb_item_cat where id = #{itemId}
+	</select>
+	
+	
+	<!--批量修改状态  -->
+	<update id="updateItemStatus">
+		update tb_item set status = #{status} where id in (
+			<foreach collection="ids" item="id" separator=",">
+				#{id}
+			</foreach>
+		)
+	</update>
+	
+</mapper>
