@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- MVC注解驱动，引入3个类request,response,json -->
+	<mvc:annotation-driven/>
+
+	<!-- 配置扫描器，使得@Controller注解生效 -->
+	<context:component-scan base-package="com.jt.web.controller" />
+
+	<!-- 定义视图解析器 -->
+	<!-- prefix="/WEB-INF/jsp/", suffix=".jsp", viewname="test" -> "/WEB-INF/jsp/test.jsp" -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 前缀 -->
+		<property name="prefix" value="/WEB-INF/views/" />
+		<!-- 后缀 -->
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<!-- 配置拦截器 -->
+	<mvc:interceptors>
+	
+		<!-- 配置购物车的拦截器，只拦截购物车的请求
+		特点是：请求路径中，包含cart,比如：http://www.jt.com/cart/ -->
+		<mvc:interceptor>
+			<!-- 拦截所有的 /cart请求 -->
+			<mvc:mapping path="/cart/**"/>
+			<!-- 配置购物车拦截的实现类 -->
+			<bean class="com.jt.web.interceptor.CartInterceptor"></bean>
+		</mvc:interceptor>
+	
+		<!-- 配置订单拦截器 -->
+		<mvc:interceptor>
+		<mvc:mapping path="/order/**"/>
+		<bean class="com.jt.web.interceptor.OrderInterceptor"></bean>
+	
+		</mvc:interceptor>
+	
+	
+	</mvc:interceptors>
+	
+	
+	<!-- 处理静态资源被“/”所拦截的问题 -->
+	<mvc:default-servlet-handler />
+</beans>
